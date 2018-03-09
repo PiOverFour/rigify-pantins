@@ -224,22 +224,29 @@ def make_follow(obj, b, target, ctrl_name=None, follow_name=None):
     prop["soft_max"] = 1.0
     prop["min"] = 0.0
     prop["max"] = 1.0
-
-    for i_c, con_name in enumerate(('follow', 'follow_inverse')):
+    
+    # Get follow bone's parent chain
+    parent_chain = pb[follow_bone].parent_recursive
+    print('PARENT_CHIANT', parent_chain)
+    parent_chain = [strip_org(b.name) for b in parent_chain]
+    parent_chain.reverse()
+    
+    for i_c, parent_name in enumerate(parent_chain):
         con = pb[follow_bone].constraints.new('COPY_ROTATION')
-        con.name = con_name
+        con.name = 'follow_' +parent_name
         con.target = obj
-        con.subtarget = target
+        con.subtarget = parent_name
+        con.use_offset = True
         con.use_x = True
         con.use_y = True
         con.use_z = True
-        if i_c:
+        if i_c == len(parent_chain) - 1:
             con.invert_x = True
             con.invert_y = True
             con.invert_z = True
             con.invert_z = True
-        con.target_space = 'LOCAL' if i_c else 'WORLD'
-        con.owner_space = 'LOCAL' if i_c else 'WORLD'
+        con.target_space = 'LOCAL'
+        con.owner_space = 'LOCAL'
         # TODO investigate strange behaviour with FLIP
 
         # Drivers
