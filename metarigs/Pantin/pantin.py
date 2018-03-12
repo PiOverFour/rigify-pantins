@@ -27,7 +27,7 @@ def create(obj):
     bpy.ops.object.mode_set(mode='EDIT')
     arm = obj.data
 
-    for i in range(4):
+    for i in range(5):
         arm.rigify_colors.add()
 
     arm.rigify_colors[0].name = "Left"
@@ -50,6 +50,11 @@ def create(obj):
     arm.rigify_colors[3].normal = Color((0.9568628072738647, 0.7882353663444519, 0.0470588281750679))
     arm.rigify_colors[3].select = Color((0.3140000104904175, 0.7839999794960022, 1.0))
     arm.rigify_colors[3].standard_colors_lock = True
+    arm.rigify_colors[4].name = "Body"
+    arm.rigify_colors[4].active = Color((0.5137255191802979, 0.9372549653053284, 0.11372549831867218))
+    arm.rigify_colors[4].normal = Color((0.11764706671237946, 0.5686274766921997, 0.03529411926865578))
+    arm.rigify_colors[4].select = Color((0.3490196168422699, 0.7176470756530762, 0.04313725605607033))
+    arm.rigify_colors[4].standard_colors_lock = True
 
     for i in range(29):
         arm.rigify_layers.add()
@@ -65,7 +70,7 @@ def create(obj):
     arm.rigify_layers[2].name = "Torso"
     arm.rigify_layers[2].row = 2
     arm.rigify_layers[2].set = False
-    arm.rigify_layers[2].group = 0
+    arm.rigify_layers[2].group = 5
     arm.rigify_layers[3].name = " "
     arm.rigify_layers[3].row = 1
     arm.rigify_layers[3].set = False
@@ -881,3 +886,4 @@ def create(obj):
 
 if __name__ == "__main__":
     create(bpy.context.active_object)
+
