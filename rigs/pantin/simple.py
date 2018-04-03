@@ -132,6 +132,7 @@ class Rig:
             ctrl_bone_e.head = eb[last_bone].tail
             ctrl_bone_e.tail = eb[last_bone].tail + Vector((0.3, 0, 0))
             align_bone_z_axis(self.obj, ctrl_bone, Vector((0, 1, 0)))
+            ctrl_chain.append(ctrl_bone)
             # ctrl_bone_e.layers = layers
 
         for i, b in enumerate(self.org_bones):
@@ -250,7 +251,7 @@ class Rig:
         pb = self.obj.pose.bones
 
         # Pose bone settings
-        if self.params.chain_type in ('Curve', 'Dynamic'):
+        if self.params.chain_type in ('IK', 'Curve', 'Dynamic'):
             pbone = pb[ctrl_chain[-1]]
             pbone.rotation_mode = 'XZY'
             pbone.lock_location = (False, False, True)
