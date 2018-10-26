@@ -28,6 +28,9 @@ from rigify.utils import align_bone_z_axis
 
 from . import pantin_utils
 
+from .pantin_template import (UI_IMPORTS, PANTIN_UTILS, PANTIN_REGISTER,
+                              REGISTER_PANTIN_DRIVERS, REGISTER_PANTIN_PROPS)
+
 # % ctrl_bone, MCH-bone.dyn
 script = """
 simple = "%s"
@@ -294,7 +297,7 @@ class Rig:
                 con.target = self.obj
                 con.subtarget = ctrl
 
-        ui_script = None
+        ui_script = ""
 
         if self.params.chain_type == 'Curve':
             for ctrl, mch in zip(ctrl_chain[1:], mch_chain):
@@ -337,8 +340,14 @@ class Rig:
                                 and con.subtarget + side in pb):
                             con.subtarget += side
 
-        if ui_script is not None:
-            return [ui_script]
+        return {
+            'script': [ui_script],
+            'imports': UI_IMPORTS,
+            'utilities': PANTIN_UTILS,
+            'register': PANTIN_REGISTER,
+            'register_drivers': REGISTER_PANTIN_DRIVERS,
+            'register_props': REGISTER_PANTIN_PROPS,
+            }
 
 
 def add_parameters(params):

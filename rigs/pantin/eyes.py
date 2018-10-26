@@ -28,6 +28,9 @@ from rigify.utils import align_bone_z_axis
 
 from . import pantin_utils
 
+from .pantin_template import (UI_IMPORTS, PANTIN_UTILS, PANTIN_REGISTER,
+                              REGISTER_PANTIN_DRIVERS, REGISTER_PANTIN_PROPS)
+
 
 class Rig:
     def __init__(self, obj, bone_name, params):
@@ -154,6 +157,14 @@ class Rig:
         # if self.params.do_flip:
         #     pantin_utils.create_ik_child_of(
         #         self.obj, ctrl_bone, self.params.pelvis_name)
+
+        return {
+            'imports': UI_IMPORTS,
+            'utilities': PANTIN_UTILS,
+            'register': PANTIN_REGISTER,
+            'register_drivers': REGISTER_PANTIN_DRIVERS,
+            'register_props': REGISTER_PANTIN_PROPS,
+            }
 
 
 def add_parameters(params):

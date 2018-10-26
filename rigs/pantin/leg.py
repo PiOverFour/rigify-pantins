@@ -32,30 +32,10 @@ from rigify.utils import get_layers
 from . import pantin_utils
 from . import limb_common
 
-importlib.reload(pantin_utils)
-importlib.reload(limb_common)
-
-script = """
-ik_leg = ["%s", "%s", "%s", "%s"]
-fk_leg = ["%s", "%s", "%s", "%s"]
-if is_selected(ik_leg):
-    layout.prop(pose_bones[ik_leg[2]],
-                '["pelvis_follow"]',
-                text="Follow pelvis (" + ik_leg[2] + ")",
-                slider=True
-                )
-if is_selected(ik_leg + fk_leg):
-    layout.prop(pose_bones[ik_leg[2]],
-                '["IK_FK"]',
-                text="IK FK (" + ik_leg[2] + ")",
-                slider=True
-                )
-if is_selected(fk_leg):
-    layout.prop(pose_bones[fk_leg[0]],
-                '["follow"]',
-                text="Follow (" + fk_leg[0] + ")",
-                slider=True)
-"""
+from .pantin_template import (UI_IMPORTS, PANTIN_UTILS, PANTIN_REGISTER,
+                              UI_PANTIN_LIMB_SCRIPT,
+                              UTILITIES_PANTIN_LIMBS, REGISTER_PANTIN_LIMBS,
+                              REGISTER_PANTIN_DRIVERS, REGISTER_PANTIN_PROPS)
 
 
 class Rig:
@@ -477,9 +457,9 @@ class Rig:
                 var_fk.targets[0].data_path = 'pose.bones["{}"]["IK_FK"]'.format(elimb_ik)
 
 
-            ui_script += script % (ulimb_ik, joint_str, elimb_ik, toe_ik_ctl,
-                                   ulimb_fk, flimb_fk, elimb_fk, toe_fk_ctl,
-                                   )
+            ui_script += UI_PANTIN_LIMB_SCRIPT % (
+                '"{}", "{}", "{}", "{}"'.format(ulimb_ik, joint_str, elimb_ik, toe_ik_ctl),
+                '"{}", "{}", "{}", "{}"'.format(ulimb_fk, flimb_fk, elimb_fk, toe_fk_ctl))
 
             if self.params.do_stretch:
                 ui_script += """    layout.prop(pose_bones[ik_leg[2]], \
@@ -487,7 +467,14 @@ class Rig:
 text="Foot stretch (" + ik_leg[2] + ")", slider=True)
     """
 
-        return [ui_script]
+        return {
+            'script': [ui_script],
+            'imports': UI_IMPORTS,
+            'utilities': PANTIN_UTILS + [UTILITIES_PANTIN_LIMBS],
+            'register': PANTIN_REGISTER + REGISTER_PANTIN_LIMBS,
+            'register_drivers': REGISTER_PANTIN_DRIVERS,
+            'register_props': REGISTER_PANTIN_PROPS,
+            }
 
 
 def add_parameters(params):

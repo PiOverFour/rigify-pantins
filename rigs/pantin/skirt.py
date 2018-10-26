@@ -26,6 +26,9 @@ from rigify.utils import connected_children_names, has_connected_children
 
 from . import pantin_utils
 
+from .pantin_template import (UI_IMPORTS, PANTIN_UTILS, PANTIN_REGISTER,
+                              REGISTER_PANTIN_DRIVERS, REGISTER_PANTIN_PROPS)
+
 class Rig:
     def __init__(self, obj, bone_name, params):
         self.obj = obj
@@ -180,8 +183,21 @@ class Rig:
                 var.targets[0].transform_type = 'ROT_Z'
                 var.targets[0].transform_space = 'LOCAL_SPACE'
 
+        return {
+            'imports': UI_IMPORTS,
+            'utilities': PANTIN_UTILS,
+            'register': PANTIN_REGISTER,
+            'register_drivers': REGISTER_PANTIN_DRIVERS,
+            'register_props': REGISTER_PANTIN_PROPS,
+        }
 
-        # return []
+        #     # hack: apply bas rotation
+        # for f in trackers:
+        #     # bpy.ops.object.mode_set(mode='OBJECT')
+        #     m = self.obj.pose.bones[f].matrix.copy()
+        #     bpy.ops.object.mode_set(mode='EDIT')
+        #     self.obj.data.edit_bones[f].matrix = m
+        #     bpy.ops.object.mode_set(mode='OBJECT')
 
 
 def add_parameters(params):

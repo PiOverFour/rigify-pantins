@@ -28,30 +28,10 @@ from rigify.utils import get_layers
 from . import pantin_utils
 from . import limb_common
 
-importlib.reload(pantin_utils)
-importlib.reload(limb_common)
-
-script = """
-ik_arm = ["%s", "%s", "%s"]
-fk_arm = ["%s", "%s", "%s"]
-if is_selected(ik_arm):
-    layout.prop(pose_bones[ik_arm[2]],
-                '["pelvis_follow"]',
-                text="Follow pelvis (" + ik_arm[2] + ")",
-                slider=True
-                )
-if is_selected(ik_arm + fk_arm):
-    layout.prop(pose_bones[ik_arm[2]],
-                '["IK_FK"]',
-                text="IK FK (" + ik_arm[2] + ")",
-                slider=True
-                )
-if is_selected(fk_arm):
-    layout.prop(pose_bones[fk_arm[0]],
-                '["follow"]',
-                text="Follow (" + fk_arm[0] + ")",
-                slider=True)
-"""
+from .pantin_template import (UI_IMPORTS, PANTIN_UTILS, PANTIN_REGISTER,
+                              UI_PANTIN_LIMB_SCRIPT,
+                              UTILITIES_PANTIN_LIMBS, REGISTER_PANTIN_LIMBS,
+                              REGISTER_PANTIN_DRIVERS, REGISTER_PANTIN_PROPS)
 
 
 class Rig:
@@ -189,11 +169,18 @@ class Rig:
                 var_fk.targets[0].id = self.obj
                 var_fk.targets[0].data_path = 'pose.bones["{}"]["IK_FK"]'.format(elimb_ik)
 
-            ui_script += script % (ulimb_ik, joint_str, elimb_ik,
-                                   ulimb_fk, flimb_fk, elimb_fk, )
+            ui_script += UI_PANTIN_LIMB_SCRIPT % (
+                '"{}", "{}", "{}"'.format(ulimb_ik, joint_str, elimb_ik),
+                '"{}", "{}", "{}"'.format(ulimb_fk, flimb_fk, elimb_fk))
 
-        return [ui_script]
-
+        return {
+            'script': [ui_script],
+            'imports': UI_IMPORTS,
+            'utilities': PANTIN_UTILS + [UTILITIES_PANTIN_LIMBS],
+            'register': PANTIN_REGISTER + REGISTER_PANTIN_LIMBS,
+            'register_drivers': REGISTER_PANTIN_DRIVERS,
+            'register_props': REGISTER_PANTIN_PROPS,
+            }
 
 def add_parameters(params):
     params.Z_index = bpy.props.FloatProperty(

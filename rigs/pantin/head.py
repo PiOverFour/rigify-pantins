@@ -25,6 +25,9 @@ from rigify.utils import connected_children_names, has_connected_children
 
 from . import pantin_utils
 
+from .pantin_template import (UI_IMPORTS, PANTIN_UTILS, PANTIN_REGISTER,
+                              REGISTER_PANTIN_DRIVERS, REGISTER_PANTIN_PROPS)
+
 script = """
 head = "%s"
 if is_selected(head):
@@ -116,7 +119,14 @@ class Rig:
         con.max_z = 0.68
         con.owner_space = 'LOCAL'
 
-        return [ui_script]
+        return {
+            'script': [ui_script],
+            'imports': UI_IMPORTS,
+            'utilities': PANTIN_UTILS,
+            'register': PANTIN_REGISTER,
+            'register_drivers': REGISTER_PANTIN_DRIVERS,
+            'register_props': REGISTER_PANTIN_PROPS,
+            }
 
 
 def add_parameters(params):

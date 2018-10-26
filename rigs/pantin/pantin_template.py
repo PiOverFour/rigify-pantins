@@ -16,18 +16,16 @@
 #
 #======================= END GPL LICENSE BLOCK ========================
 
-UI_SLIDERS = '''
-import bpy
-from rna_prop_ui import rna_idprop_ui_prop_get
-from mathutils import Matrix, Vector
-from math import acos, pi
+UI_IMPORTS = [
+    'from rna_prop_ui import rna_idprop_ui_prop_get',
+    'from math import acos',
+]
 
-rig_id = "%s"
-
-
+UTILITIES_PANTIN_DRIVERS = '''
 #######################
 ## Driver namespace  ##
 #######################
+
 MEMBER_OFFSET = 0.01
 BONE_OFFSET = 0.001
 
@@ -48,7 +46,11 @@ def z_index_same(member_index, flip, bone_index, extra_offset=0.0):
         return -member_index * MEMBER_OFFSET - bone_index * BONE_OFFSET - extra_offset * MEMBER_OFFSET
     else:
         return member_index * MEMBER_OFFSET + bone_index * BONE_OFFSET + extra_offset * MEMBER_OFFSET
+'''
 
+REGISTER_PANTIN_DRIVERS = ['z_index', 'z_index_same']
+
+UTILITIES_PANTIN_ROOT_MOD = '''
 #######################
 ## Root modification ##
 #######################
@@ -97,8 +99,9 @@ if do_create_driver:
     var_fs.targets[0].data_path = (pb["root"].path_from_id()
                                    + '["flip"]')
 
+'''
 
-
+UTILITIES_PANTIN_LIMBS = '''
 #######################
 ## Swapping operator ##
 #######################
@@ -136,47 +139,6 @@ class Rigify_Swap_Bones(bpy.types.Operator):
                 else:
                     self.report({'INFO'}, 'Bone {} is not symmetrical'.format(pb.name))
         return {'FINISHED'}
-
-
-########################
-## Selection operator ##
-########################
-
-class Rigify_Select_Member(bpy.types.Operator):
-    """ Select control bones in member
-    """
-    bl_idname = "pose.rigify_select_member" + rig_id
-    bl_label = "Select control bones in member"
-    bl_options = {'UNDO'}
-
-    layer = bpy.props.IntProperty()
-    add = bpy.props.BoolProperty(default=False)
-    sub = bpy.props.BoolProperty(default=False)
-
-    @classmethod
-    def poll(cls, context):
-        return (context.active_object != None and context.mode in ('POSE', 'OBJECT'))
-
-    def invoke(self, context, event):
-        self.add = event.shift
-        self.sub = event.ctrl
-        return self.execute(context)
-
-    def execute(self, context):
-        obj = context.object
-        if not obj.data.layers[self.layer]:
-            obj.data.layers[self.layer] = True
-        for pb in obj.pose.bones:
-            if pb.bone.layers[self.layer]:
-                if self.sub:
-                    pb.bone.select = False
-                else:
-                    pb.bone.select = True
-            else:
-                if not self.add and not self.sub:
-                    pb.bone.select = False
-        return {'FINISHED'}
-
 
 ###########################
 ## IK/FK Switch operator ##
@@ -307,8 +269,54 @@ class Rigify_IK_Switch(bpy.types.Operator):
         obj.update_tag({"DATA"})
         context.scene.update() # Force update
         return {'FINISHED'}
+'''
 
+REGISTER_PANTIN_LIMBS = ['Rigify_Swap_Bones', 'Rigify_IK_Switch']
 
+UTILITIES_PANTIN_SELECTION = '''
+########################
+## Selection operator ##
+########################
+
+class Rigify_Select_Member(bpy.types.Operator):
+    """ Select control bones in member
+    """
+    bl_idname = "pose.rigify_select_member" + rig_id
+    bl_label = "Select control bones in member"
+    bl_options = {'UNDO'}
+
+    layer = bpy.props.IntProperty()
+    add = bpy.props.BoolProperty(default=False)
+    sub = bpy.props.BoolProperty(default=False)
+
+    @classmethod
+    def poll(cls, context):
+        return (context.active_object != None and context.mode in ('POSE', 'OBJECT'))
+
+    def invoke(self, context, event):
+        self.add = event.shift
+        self.sub = event.ctrl
+        return self.execute(context)
+
+    def execute(self, context):
+        obj = context.object
+        if not obj.data.layers[self.layer]:
+            obj.data.layers[self.layer] = True
+        for pb in obj.pose.bones:
+            if pb.bone.layers[self.layer]:
+                if self.sub:
+                    pb.bone.select = False
+                else:
+                    pb.bone.select = True
+            else:
+                if not self.add and not self.sub:
+                    pb.bone.select = False
+        return {'FINISHED'}
+'''
+
+REGISTER_PANTIN_SELECTION = ['Rigify_Select_Member']
+
+UTILITIES_PANTIN_Z_OPS = '''
 ###################################
 ## Bone Z Index Operators and UI ##
 ###################################
@@ -542,12 +550,16 @@ class Rigify_Reorder_Bones(bpy.types.Operator):
         bpy.ops.object.mode_set(mode=mode)
 
         return {'FINISHED'}
+'''
 
+REGISTER_PANTIN_Z_OPS = ['Rigify_Fill_Members', 'Rigify_Reapply_Members',
+                         'Rigify_Sort_Doubles', 'Rigify_Reorder_Members',
+                         'Rigify_Reorder_Bones']
+
+UTILITIES_PANTIN_Z_UI = '''
 class PantinBones(bpy.types.PropertyGroup):
     name = bpy.props.StringProperty()
     index = bpy.props.IntProperty()
-
-bpy.utils.register_class(PantinBones)
 
 def member_index_update(self, context):
     for m in self.id_data.pantin_members:
@@ -558,13 +570,10 @@ def member_index_update(self, context):
         if not b.bone.use_deform:
             continue
 
-
-
 class PantinMembers(bpy.types.PropertyGroup):
     index = bpy.props.FloatProperty(precision=1, update=member_index_update)
-    bones = bpy.props.CollectionProperty(type=bpy.types.PantinBones)
+    bones = bpy.props.CollectionProperty(type=PantinBones)
     active_bone = bpy.props.IntProperty()
-
 
 class PANTIN_UL_bones_list(bpy.types.UIList):
     # The draw_item function is called for each item of the collection that is visible in the list.
@@ -591,8 +600,11 @@ class PANTIN_UL_bones_list(bpy.types.UIList):
         elif self.layout_type in {'GRID'}:
             layout.alignment = 'CENTER'
             layout.label(text="", icon_value=icon)
+'''
 
+REGISTER_PANTIN_Z_UI = ['PantinBones', 'PantinMembers', 'PANTIN_UL_bones_list']
 
+UI_PANTIN_MEMBERS = '''
 ###################
 ## Rig UI Panels ##
 ###################
@@ -655,185 +667,145 @@ class DATA_PT_members_panel(bpy.types.Panel):
             col.operator("pose.rigify_fill_members" + rig_id)
             col.operator("pose.rigify_sort_doubles" + rig_id)
             col.operator("pose.rigify_reapply_order_members" + rig_id)
+'''
 
-class RigUI(bpy.types.Panel):
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_label = "Rig Main Properties"
-    bl_idname = rig_id + "_PT_rig_ui"
+REGISTER_UI_PANTIN_MEMBERS = ['DATA_PT_members_panel']
 
-    @classmethod
-    def poll(self, context):
-        if context.mode != 'POSE':
-            return False
-        try:
-            # return ("rig_id" in context.active_object.data)
-            return (context.active_object.data.get("rig_id") == rig_id)
-        except (AttributeError, KeyError, TypeError):
-            return False
 
-    def draw(self, context):
-        layout = self.layout
-        pose_bones = context.active_object.pose.bones
-        # bones = context.active_object.data.bones
-        try:
-            selected_bones = [bone.name for bone in context.selected_pose_bones]
-            selected_bones += [context.active_pose_bone.name]
-        except (AttributeError, TypeError):
-            return
+UI_PANTIN_SCRIPT = '''
+layout.prop(pose_bones["root"], '["flip"]', text="Flip", slider=True)
+layout.separator()
+'''
 
-        def is_selected(names):
-            # Returns whether any of the named bones are selected.
-            if type(names) == list:
-                for name in names:
-                    if name in selected_bones:
-                        return True
-            elif names in selected_bones:
-                return True
-            return False
+UI_PANTIN_LIMB_SCRIPT = '''
+ik_limb = [%s]
+fk_limb = [%s]
 
-        layout.operator("pose.rigify_swap_bones" + rig_id)
-        layout.separator()
-        col = layout.column(align=True)
+if is_selected(ik_limb + fk_limb):
+    layout.operator("pose.rigify_swap_bones" + rig_id)
+    layout.separator()
+    col = layout.column(align=True)
 
-        row = col.row(align=True)
-        op = row.operator("pose.rigify_ik_switch" + rig_id, text="Snap FK to IK")
-        op.to_ik = True
-        op.keyframe_insert = False
-        op = row.operator("pose.rigify_ik_switch" + rig_id, text="", icon="KEY_HLT")
-        op.to_ik = True
-        op.keyframe_insert = True
+    row = col.row(align=True)
+    op = row.operator("pose.rigify_ik_switch" + rig_id, text="Snap FK to IK")
+    op.to_ik = True
+    op.keyframe_insert = False
+    op = row.operator("pose.rigify_ik_switch" + rig_id, text="", icon="KEY_HLT")
+    op.to_ik = True
+    op.keyframe_insert = True
 
-        row = col.row(align=True)
-        op = row.operator("pose.rigify_ik_switch" + rig_id, text="Snap IK to FK")
-        op.to_ik = False
-        op.keyframe_insert = False
-        op = row.operator("pose.rigify_ik_switch" + rig_id, text="", icon="KEY_HLT")
-        op.to_ik = False
-        op.keyframe_insert = True
+    row = col.row(align=True)
+    op = row.operator("pose.rigify_ik_switch" + rig_id, text="Snap IK to FK")
+    op.to_ik = False
+    op.keyframe_insert = False
+    op = row.operator("pose.rigify_ik_switch" + rig_id, text="", icon="KEY_HLT")
+    op.to_ik = False
+    op.keyframe_insert = True
+    layout.separator()
 
-        layout.separator()
-
-        layout.prop(pose_bones["root"], '["flip"]', text="Flip", slider=True)
-        layout.separator()
-
+if is_selected(ik_limb):
+    layout.prop(pose_bones[ik_limb[2]],
+                '["pelvis_follow"]',
+                text="Follow pelvis (" + ik_limb[2] + ")",
+                slider=True
+                )
+if is_selected(ik_limb + fk_limb):
+    layout.prop(pose_bones[ik_limb[2]],
+                '["IK_FK"]',
+                text="IK FK (" + ik_limb[2] + ")",
+                slider=True
+                )
+if is_selected(fk_limb):
+    layout.prop(pose_bones[fk_limb[0]],
+                '["follow"]',
+                text="Follow (" + fk_limb[0] + ")",
+                slider=True)
 '''
 
 
-def layers_ui(layers, layout):
-    """ Turn a list of booleans + a list of names into a layer UI.
-    """
+# def layers_ui(layers, layout):
+#     """ Turn a list of booleans + a list of names into a layer UI.
+#     """
+#
+#     code = '''
+# class RigLayers(bpy.types.Panel):
+#     bl_space_type = 'VIEW_3D'
+#     bl_region_type = 'UI'
+#     bl_label = "Rig Layers"
+#     bl_idname = rig_id + "_PT_rig_layers"
+#
+#     @classmethod
+#     def poll(self, context):
+#         try:
+#             # return ("rig_id" in context.active_object.data)
+#             return (context.active_object.data.get("rig_id") == rig_id)
+#         except (AttributeError, KeyError, TypeError):
+#             return False
+#
+#     def draw(self, context):
+#         layout = self.layout
+#         col = layout.column()
+# '''
+#     rows = {}
+#     for i in range(28):
+#         if layers[i]:
+#             if layout[i][1] not in rows:
+#                 rows[layout[i][1]] = []
+#             rows[layout[i][1]] += [(layout[i][0], i)]
+#
+#     keys = list(rows.keys())
+#     keys.sort()
+#
+#     visibility_code = """        icon = ('SMALL_TRI_RIGHT_VEC'
+#             if context.active_pose_bone
+#             and context.active_pose_bone.bone.layers[{index}]
+#             else 'NONE'
+#         )
+# """
+#
+#     for key in keys:
+#         code += "\n        row = col.row()\n"
+#         i = 0
+#         for l in rows[key]:
+#             if i > 3:
+#                 code += "\n        row = col.row()\n"
+#                 i = 0
+#             code += visibility_code.format(index=str(l[1]))
+#             code += """        sub = row.row(align=True)
+#         sub.prop(context.active_object.data, 'layers', index={index}, toggle=True, text='{text}', icon=icon)
+#         op = sub.operator("pose.rigify_select_member" + rig_id, icon='HAND', text="")
+#         op.layer = {index}
+# """.format(index=str(l[1]), text=l[0])  # % (str(l[1]), l[0], str(l[1]))
+#             i += 1
+#
+#     # Def layer (for parenting)
+#     code += "\n        row = col.row()"
+#     code += "\n        row.separator()"
+#     code += "\n        row = col.row()"
+#     code += "\n        row.separator()\n"
+#     code += "\n        row = col.row()\n"
+#     code += visibility_code.format(index=str(29))
+#     code += "        row.prop(context.active_object.data, 'layers', index=29, toggle=True, text='Deformation', icon=icon)\n"
+#
+#     # Root layer
+#     code += "\n        row = col.row()\n"
+#     code += visibility_code.format(index=str(28))
+#     code += "        row.prop(context.active_object.data, 'layers', index=28, toggle=True, text='Root', icon=icon)\n"
+#
+#     return code
 
-    code = '''
-class RigLayers(bpy.types.Panel):
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_label = "Rig Layers"
-    bl_idname = rig_id + "_PT_rig_layers"
+REGISTER_PANTIN_PROPS = [('Object.pantin_members', 'bpy.props.CollectionProperty(type=PantinMembers)')]
 
-    @classmethod
-    def poll(self, context):
-        try:
-            # return ("rig_id" in context.active_object.data)
-            return (context.active_object.data.get("rig_id") == rig_id)
-        except (AttributeError, KeyError, TypeError):
-            return False
+# Common utils
+PANTIN_UTILS = [UTILITIES_PANTIN_DRIVERS,
+                UTILITIES_PANTIN_ROOT_MOD,
+                UTILITIES_PANTIN_SELECTION,
+                UTILITIES_PANTIN_Z_OPS,
+                UTILITIES_PANTIN_Z_UI,
+                UI_PANTIN_MEMBERS]
 
-    def draw(self, context):
-        layout = self.layout
-        col = layout.column()
-'''
-    rows = {}
-    for i in range(28):
-        if layers[i]:
-            if layout[i][1] not in rows:
-                rows[layout[i][1]] = []
-            rows[layout[i][1]] += [(layout[i][0], i)]
-
-    keys = list(rows.keys())
-    keys.sort()
-
-    visibility_code = """        icon = ('SMALL_TRI_RIGHT_VEC'
-            if context.active_pose_bone
-            and context.active_pose_bone.bone.layers[{index}]
-            else 'NONE'
-        )
-"""
-
-    for key in keys:
-        code += "\n        row = col.row()\n"
-        i = 0
-        for l in rows[key]:
-            if i > 3:
-                code += "\n        row = col.row()\n"
-                i = 0
-            code += visibility_code.format(index=str(l[1]))
-            code += """        sub = row.row(align=True)
-        sub.prop(context.active_object.data, 'layers', index={index}, toggle=True, text='{text}', icon=icon)
-        op = sub.operator("pose.rigify_select_member" + rig_id, icon='HAND', text="")
-        op.layer = {index}
-""".format(index=str(l[1]), text=l[0])  # % (str(l[1]), l[0], str(l[1]))
-            i += 1
-
-    # Def layer (for parenting)
-    code += "\n        row = col.row()"
-    code += "\n        row.separator()"
-    code += "\n        row = col.row()"
-    code += "\n        row.separator()\n"
-    code += "\n        row = col.row()\n"
-    code += visibility_code.format(index=str(29))
-    code += "        row.prop(context.active_object.data, 'layers', index=29, toggle=True, text='Deformation', icon=icon)\n"
-
-    # Root layer
-    code += "\n        row = col.row()\n"
-    code += visibility_code.format(index=str(28))
-    code += "        row.prop(context.active_object.data, 'layers', index=28, toggle=True, text='Root', icon=icon)\n"
-
-    return code
-
-
-UI_REGISTER = '''
-
-def register():
-    bpy.utils.register_class(Rigify_Swap_Bones)
-    bpy.utils.register_class(Rigify_Select_Member)
-    bpy.utils.register_class(Rigify_IK_Switch)
-    bpy.utils.register_class(RigUI)
-    bpy.utils.register_class(RigLayers)
-
-    bpy.app.driver_namespace["z_index"] = z_index
-    bpy.app.driver_namespace["z_index_same"] = z_index_same
-
-    bpy.utils.register_class(Rigify_Fill_Members)
-    bpy.utils.register_class(Rigify_Reapply_Members)
-    bpy.utils.register_class(Rigify_Reorder_Members)
-    bpy.utils.register_class(Rigify_Sort_Doubles)
-    bpy.utils.register_class(Rigify_Reorder_Bones)
-    bpy.utils.register_class(PantinMembers)
-    bpy.utils.register_class(PANTIN_UL_bones_list)
-    bpy.utils.register_class(DATA_PT_members_panel)
-    bpy.types.Object.pantin_members = bpy.props.CollectionProperty(type=PantinMembers)
-
-def unregister():
-    bpy.utils.unregister_class(Rigify_Swap_Bones)
-    bpy.utils.unregister_class(Rigify_Select_Member)
-    bpy.utils.unregister_class(Rigify_IK_Switch)
-    bpy.utils.unregister_class(RigUI)
-    bpy.utils.unregister_class(RigLayers)
-
-    del bpy.app.driver_namespace["z_index"]
-    del bpy.app.driver_namespace["z_index_same"]
-
-    del bpy.types.Object.pantin_members
-    bpy.utils.unregister_class(Rigify_Fill_Members)
-    bpy.utils.unregister_class(Rigify_Reapply_Members)
-    bpy.utils.unregister_class(Rigify_Sort_Doubles)
-    bpy.utils.unregister_class(Rigify_Reorder_Members)
-    bpy.utils.unregister_class(Rigify_Reorder_Bones)
-    bpy.utils.unregister_class(PANTIN_UL_bones_list)
-    bpy.utils.unregister_class(DATA_PT_members_panel)
-    bpy.utils.unregister_class(PantinMembers)
-    bpy.utils.unregister_class(PantinBones)
-
-register()
-'''
+# Common register
+PANTIN_REGISTER = (REGISTER_PANTIN_SELECTION
+                   + REGISTER_PANTIN_Z_OPS
+                   + REGISTER_PANTIN_Z_UI
+                   + REGISTER_UI_PANTIN_MEMBERS)
