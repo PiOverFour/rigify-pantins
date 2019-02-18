@@ -29,7 +29,7 @@ from rigify.utils import align_bone_z_axis
 from . import pantin_utils
 
 from .pantin_template import (UI_IMPORTS, PANTIN_UTILS, PANTIN_REGISTER,
-                              REGISTER_PANTIN_DRIVERS, REGISTER_PANTIN_PROPS)
+                              REGISTER_PANTIN_PROPS)
 
 # % ctrl_bone, MCH-bone.dyn
 script = """
@@ -345,7 +345,6 @@ class Rig:
             'imports': UI_IMPORTS,
             'utilities': PANTIN_UTILS,
             'register': PANTIN_REGISTER,
-            'register_drivers': REGISTER_PANTIN_DRIVERS,
             'register_props': REGISTER_PANTIN_PROPS,
             }
 
@@ -408,7 +407,7 @@ def parameters_ui(layout, params):
     r.prop(params, "flip_switch")
     col = layout.column(align=True)
     r = col.row()
-    r.label("Side:")
+    r.label(text="Side:")
     r = col.row()
     r.prop(params, "object_side", expand=True)
     c = layout.column()

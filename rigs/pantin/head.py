@@ -26,7 +26,7 @@ from rigify.utils import connected_children_names, has_connected_children
 from . import pantin_utils
 
 from .pantin_template import (UI_IMPORTS, PANTIN_UTILS, PANTIN_REGISTER,
-                              REGISTER_PANTIN_DRIVERS, REGISTER_PANTIN_PROPS)
+                              REGISTER_PANTIN_PROPS)
 
 script = """
 head = "%s"
@@ -124,7 +124,6 @@ class Rig:
             'imports': UI_IMPORTS,
             'utilities': PANTIN_UTILS,
             'register': PANTIN_REGISTER,
-            'register_drivers': REGISTER_PANTIN_DRIVERS,
             'register_props': REGISTER_PANTIN_PROPS,
             }
 

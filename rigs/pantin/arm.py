@@ -31,7 +31,7 @@ from . import limb_common
 from .pantin_template import (UI_IMPORTS, PANTIN_UTILS, PANTIN_REGISTER,
                               UI_PANTIN_LIMB_SCRIPT,
                               UTILITIES_PANTIN_LIMBS, REGISTER_PANTIN_LIMBS,
-                              REGISTER_PANTIN_DRIVERS, REGISTER_PANTIN_PROPS)
+                              REGISTER_PANTIN_PROPS)
 
 
 class Rig:
@@ -178,7 +178,6 @@ class Rig:
             'imports': UI_IMPORTS,
             'utilities': PANTIN_UTILS + [UTILITIES_PANTIN_LIMBS],
             'register': PANTIN_REGISTER + REGISTER_PANTIN_LIMBS,
-            'register_drivers': REGISTER_PANTIN_DRIVERS,
             'register_props': REGISTER_PANTIN_PROPS,
             }
 

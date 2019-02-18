@@ -21,35 +21,6 @@ UI_IMPORTS = [
     'from math import acos',
 ]
 
-UTILITIES_PANTIN_DRIVERS = '''
-#######################
-## Driver namespace  ##
-#######################
-
-MEMBER_OFFSET = 0.01
-BONE_OFFSET = 0.001
-
-# Members are a group of bones moving together (eg. Hand, Forearm, Arm)
-# Bones are individual pieces inside this group
-# They can have an extra offset, per bone (eg. eyelid hiding behind the head)
-
-def z_index(member_index, flip, bone_index, extra_offset=0.0):
-    """This bone changes sides when the rig is flipped (eg. limbs)"""
-    if flip:
-        return member_index * MEMBER_OFFSET - bone_index * BONE_OFFSET - extra_offset * MEMBER_OFFSET
-    else:
-        return member_index * MEMBER_OFFSET + bone_index * BONE_OFFSET + extra_offset * MEMBER_OFFSET
-
-def z_index_same(member_index, flip, bone_index, extra_offset=0.0):
-    """This bone does not change sides when the rig is flipped (eg. head)"""
-    if flip:
-        return -member_index * MEMBER_OFFSET - bone_index * BONE_OFFSET - extra_offset * MEMBER_OFFSET
-    else:
-        return member_index * MEMBER_OFFSET + bone_index * BONE_OFFSET + extra_offset * MEMBER_OFFSET
-'''
-
-REGISTER_PANTIN_DRIVERS = ['z_index', 'z_index_same']
-
 UTILITIES_PANTIN_ROOT_MOD = '''
 #######################
 ## Root modification ##
@@ -797,8 +768,7 @@ if is_selected(fk_limb):
 REGISTER_PANTIN_PROPS = [('Object.pantin_members', 'bpy.props.CollectionProperty(type=PantinMembers)')]
 
 # Common utils
-PANTIN_UTILS = [UTILITIES_PANTIN_DRIVERS,
-                UTILITIES_PANTIN_ROOT_MOD,
+PANTIN_UTILS = [UTILITIES_PANTIN_ROOT_MOD,
                 UTILITIES_PANTIN_SELECTION,
                 UTILITIES_PANTIN_Z_OPS,
                 UTILITIES_PANTIN_Z_UI,

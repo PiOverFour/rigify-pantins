@@ -103,11 +103,11 @@ def create_deformation(obj,
     driver = obj.driver_add('pose.bones["{}"].location'.format(def_name), 2)
     if flip_switch:
         driver.driver.expression = (
-            'z_index(member_index, flip, bone_index, extra_offset)'
+            'member_index * 0.01 + bone_index * 0.001 * -(flip*2-1) - extra_offset * 0.01'
         )
     else:
         driver.driver.expression = (
-            'z_index_same(member_index, flip, bone_index, extra_offset)'
+                        'member_index * 0.01 * -(flip*2-1) + bone_index * 0.001 * -(flip*2-1) - extra_offset * 0.01'
         )
     var_mi = driver.driver.variables.new()
     var_bi = driver.driver.variables.new()
@@ -224,13 +224,13 @@ def make_follow(obj, b, target, ctrl_name=None, follow_name=None):
     prop["soft_max"] = 1.0
     prop["min"] = 0.0
     prop["max"] = 1.0
-    
+
     # Get follow bone's parent chain
     parent_chain = pb[follow_bone].parent_recursive
     print('PARENT_CHIANT', parent_chain)
     parent_chain = [strip_org(b.name) for b in parent_chain]
     parent_chain.reverse()
-    
+
     for i_c, parent_name in enumerate(parent_chain):
         con = pb[follow_bone].constraints.new('COPY_ROTATION')
         con.name = 'follow_' +parent_name
@@ -352,7 +352,7 @@ def create_capsule_widget(rig,
             head_tail_vector = pbone.vector * head_tail
             verts, edges = create_capsule_polygon(16, length, width, overshoot=overshoot)
             verts = [(pbone.matrix * pbone.length).inverted()
-                 * (pos + Vector(v) + head_tail_vector) for v in verts]
+                     @ (pos + Vector(v) + head_tail_vector) for v in verts]
         else:
             head_tail_vector = Vector((0, 1, 0)) * head_tail
             verts, edges = create_capsule_polygon(16, length, width, 1, 0, overshoot=overshoot)
@@ -380,7 +380,7 @@ def create_aligned_polygon_widget(rig,
             edges.append((i, i+1))
         edges[-1] = (0, len(verts)-1)
 
-        verts = [(pbone.matrix * pbone.length).inverted() * (v) for v in verts]
+        verts = [(pbone.matrix * pbone.length).inverted() @ (v) for v in verts]
 
         mesh = obj.data
         mesh.from_pydata(verts, edges, [])
@@ -405,7 +405,7 @@ def create_aligned_circle_widget(rig,
         verts, edges = create_circle_polygon(number_verts, 'Z', radius)
         head_tail_vector = Vector((0, head_tail, 0)) * pbone.length
         verts = [1/pbone.length
-                 * ((Vector(v)*Matrix.Scale(width_ratio, 3, Vector((1, 0, 0))))
+                 * ((Vector(v) @ Matrix.Scale(width_ratio, 3, Vector((1, 0, 0))))
                     + head_tail_vector) for v in verts]
         mesh = obj.data
         mesh.from_pydata(verts, edges, [])
@@ -552,7 +552,7 @@ def create_aligned_crescent_widget(rig,
 
         head_tail_vector = pbone.vector * head_tail
         verts = [(pbone.matrix * pbone.length).inverted()
-                 * (pos + Vector(v) + head_tail_vector)
+                 @ (pos + Vector(v) + head_tail_vector)
                  * radius
                  for v in verts]
 

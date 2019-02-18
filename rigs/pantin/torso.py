@@ -31,7 +31,7 @@ from . import pantin_utils
 
 from .pantin_template import (UI_IMPORTS, PANTIN_UTILS, PANTIN_REGISTER,
                               UI_PANTIN_SCRIPT,
-                              REGISTER_PANTIN_DRIVERS, REGISTER_PANTIN_PROPS)
+                              REGISTER_PANTIN_PROPS)
 
 
 class Rig:
@@ -204,7 +204,6 @@ class Rig:
             'imports': UI_IMPORTS,
             'utilities': PANTIN_UTILS,
             'register': PANTIN_REGISTER,
-            'register_drivers': REGISTER_PANTIN_DRIVERS,
             'register_props': REGISTER_PANTIN_PROPS,
         }
 
