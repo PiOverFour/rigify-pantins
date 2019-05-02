@@ -224,8 +224,6 @@ def parameters_ui(layout, params):
     r = layout.row()
     r.prop(params, "Z_index")
     r = layout.row()
-    r.prop(params, "members_number")
-    r = layout.row()
     r.prop(params, "root_name")
 
 
