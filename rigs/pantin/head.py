@@ -73,7 +73,6 @@ class Rig:
             def_bone = pantin_utils.create_deformation(
                 self.obj,
                 b,
-                self.params.flip_switch,
                 member_index=self.params.Z_index,
                 bone_index=i)
 
@@ -131,9 +130,6 @@ class Rig:
 def add_parameters(params):
     params.Z_index = bpy.props.FloatProperty(
         name="Z index", default=0.0, description="Defines member's Z order")
-    params.flip_switch = bpy.props.BoolProperty(
-        name="Flip Switch", default=False,
-        description="This member may change depth when flipped")
     params.detach = bpy.props.BoolProperty(
         name="Detach Head", default=False,
         description="Off with her head!")
@@ -144,8 +140,6 @@ def parameters_ui(layout, params):
     """
     r = layout.row()
     r.prop(params, "Z_index")
-    r = layout.row()
-    r.prop(params, "flip_switch")
     r = layout.row()
     r.prop(params, "detach")
 
@@ -195,10 +189,6 @@ def create_sample(obj):
     pbone.rotation_mode = 'XZY'
     try:
         pbone.rigify_parameters.Z_index = 0.0
-    except AttributeError:
-        pass
-    try:
-        pbone.rigify_parameters.flip_switch = False
     except AttributeError:
         pass
     pbone = obj.pose.bones[bones['Head']]

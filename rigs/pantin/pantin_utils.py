@@ -64,7 +64,6 @@ def layers_to_index(layers):
 
 def create_deformation(obj,
                        bone_name,
-                       flip_switch,
                        member_index=0,
                        bone_index=0,
                        extra_offset=0.0,
@@ -101,14 +100,9 @@ def create_deformation(obj,
 
     # Driver
     driver = obj.driver_add('pose.bones["{}"].location'.format(def_name), 2)
-    if flip_switch:
-        driver.driver.expression = (
-            'member_index * 0.01 + bone_index * 0.001 * -(flip*2-1) - extra_offset * 0.01'
-        )
-    else:
-        driver.driver.expression = (
-                        'member_index * 0.01 * -(flip*2-1) + bone_index * 0.001 * -(flip*2-1) - extra_offset * 0.01'
-        )
+    driver.driver.expression = (
+                    'member_index * 0.01 * -(flip*2-1) + bone_index * 0.001 * -(flip*2-1) - extra_offset * 0.01'
+    )
     var_mi = driver.driver.variables.new()
     var_bi = driver.driver.variables.new()
     var_flip = driver.driver.variables.new()

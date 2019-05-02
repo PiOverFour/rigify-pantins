@@ -162,13 +162,11 @@ class Rig:
                 def_bone_name += '.' + b[-1]
             def_bone = pantin_utils.create_deformation(
                 self.obj, b,
-                self.params.flip_switch,
                 member_index=Z_index,
                 bone_index=i, new_name=def_bone_name)
             if b == stretch_c_chain[1]:
                 pantin_utils.create_deformation(
                     self.obj, b,
-                    self.params.flip_switch,
                     member_index=Z_index,
                     bone_index=i+1, new_name=strip_org(self.org_bones[0])+'_int')
 
@@ -225,9 +223,6 @@ class Rig:
 def add_parameters(params):
     params.Z_index = bpy.props.FloatProperty(
         name="Z index", default=0.0, description="Defines member's Z order")
-    params.flip_switch = bpy.props.BoolProperty(
-        name="Flip Switch", default=False,
-        description="This member may change depth when flipped")
 
 
 def parameters_ui(layout, params):
@@ -235,8 +230,6 @@ def parameters_ui(layout, params):
     """
     r = layout.row()
     r.prop(params, "Z_index")
-    r = layout.row()
-    r.prop(params, "flip_switch")
 
 
 def create_sample(obj):

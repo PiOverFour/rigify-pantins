@@ -124,7 +124,6 @@ class Rig:
         for i, b in enumerate([left_ctrl, right_ctrl]):
             def_bone = pantin_utils.create_deformation(
                 self.obj, b,
-                self.params.flip_switch,
                 member_Z_index,
                 bone_Z_index + i,
                 0.0,
@@ -179,10 +178,6 @@ def add_parameters(params):
         name="First Bone Z index",
         default=0.0,
         description="Defines bone's Z order")
-    params.flip_switch = bpy.props.BoolProperty(
-        name="Flip Switch",
-        default=False,
-        description="This member may change depth when flipped")
     params.do_flip = bpy.props.BoolProperty(
         name="Do Flip",
         default=True,
@@ -207,8 +202,6 @@ def parameters_ui(layout, params):
         r = layout.row()
         r.prop(params, "member_Z_index")
         r.prop(params, "first_bone_Z_index")
-    r = layout.row()
-    r.prop(params, "flip_switch")
     r = layout.row()
     r.prop(params, "eye_name")
     col = layout.column(align=True)

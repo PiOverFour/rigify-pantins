@@ -90,7 +90,7 @@ class Rig:
                 def_bone = pantin_utils.create_deformation(
                     self.obj,
                     b,
-                    self.params.flip_switch, member_index=Z_index,
+                    member_index=Z_index,
                     bone_index=i, new_name=def_bone_name + s)
 
             # Set layers if specified
@@ -186,10 +186,6 @@ def add_parameters(params):
         name="Z index",
         default=0.0,
         description="Defines member's Z order")
-    params.flip_switch = bpy.props.BoolProperty(
-        name="Flip Switch",
-        default=True,
-        description="This member may change depth when flipped")
     params.duplicate_lr = bpy.props.BoolProperty(
         name="Duplicate LR",
         default=True,
@@ -226,7 +222,6 @@ def parameters_ui(layout, params):
     """
     r = layout.row()
     r.prop(params, "Z_index")
-    r.prop(params, "flip_switch")
     c = layout.column()
     c.prop(params, "do_flip")
     c.prop(params, "pelvis_name")

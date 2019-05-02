@@ -79,7 +79,6 @@ class Rig:
             # Def bones
             def_bone = pantin_utils.create_deformation(
                 self.obj, flap_b,
-                self.params.flip_switch,
                 member_index=self.params.Z_index,
                 bone_index=i,
                 new_name=strip_org(self.org_bone) + flap)
@@ -202,10 +201,6 @@ class Rig:
 def add_parameters(params):
     params.Z_index = bpy.props.FloatProperty(
         name="Z index", default=0.0, description="Defines member's Z order")
-    params.flip_switch = bpy.props.BoolProperty(
-        name="Flip Switch",
-        default=True,
-        description="This member may change depth when flipped")
     params.shin_name_l = bpy.props.StringProperty(
         name="Left Shin Name", default="Shin.L",
         description="The left shin bone for the skirt to track")
@@ -219,7 +214,6 @@ def parameters_ui(layout, params):
     """
     r = layout.row()
     r.prop(params, "Z_index")
-    r.prop(params, "flip_switch")
     r = layout.row()
     r.prop(params, "shin_name_l")
     r = layout.row()
