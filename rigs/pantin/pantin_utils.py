@@ -221,13 +221,12 @@ def make_follow(obj, b, target, ctrl_name=None, follow_name=None):
 
     # Get follow bone's parent chain
     parent_chain = pb[follow_bone].parent_recursive
-    print('PARENT_CHIANT', parent_chain)
     parent_chain = [strip_org(b.name) for b in parent_chain]
     parent_chain.reverse()
 
     for i_c, parent_name in enumerate(parent_chain):
         con = pb[follow_bone].constraints.new('COPY_ROTATION')
-        con.name = 'follow_' +parent_name
+        con.name = 'follow_' + parent_name
         con.target = obj
         con.subtarget = parent_name
         con.use_offset = True

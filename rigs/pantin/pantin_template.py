@@ -80,7 +80,7 @@ UTILITIES_PANTIN_LIMBS = '''
 class Rigify_Swap_Bones(bpy.types.Operator):
     """ Swap left and right bones
     """
-    bl_idname = "pose.rigify_swap_bones" + rig_id
+    bl_idname = "pose.rigify_swap_bones_" + rig_id
     bl_label = "Rigify Swap left and right selected bones"
     bl_options = {'UNDO'}
 
@@ -145,7 +145,7 @@ def get_name_from_org(name, suffix='.IK'):
 class Rigify_IK_Switch(bpy.types.Operator):
     """ Snap selected member from IK to FK or from FK to IK
     """
-    bl_idname = "pose.rigify_ik_switch" + rig_id
+    bl_idname = "pose.rigify_ik_switch_" + rig_id
     bl_label = "Snap IK/FK"
     bl_options = {'UNDO'}
 
@@ -252,7 +252,7 @@ UTILITIES_PANTIN_SELECTION = '''
 class Rigify_Select_Member(bpy.types.Operator):
     """ Select control bones in member
     """
-    bl_idname = "pose.rigify_select_member" + rig_id
+    bl_idname = "pose.rigify_select_member_" + rig_id
     bl_label = "Select control bones in member"
     bl_options = {'UNDO'}
 
@@ -294,7 +294,7 @@ UTILITIES_PANTIN_Z_OPS = '''
 
 class Rigify_Fill_Members(bpy.types.Operator):
     """Construct member and bone structure"""
-    bl_idname = "pose.rigify_fill_members" + rig_id
+    bl_idname = "pose.rigify_fill_members_" + rig_id
     bl_label = "Construct member and bone structure"
 
 
@@ -328,7 +328,7 @@ class Rigify_Fill_Members(bpy.types.Operator):
 
 class Rigify_Reapply_Members(bpy.types.Operator):
     """ Change members' order"""
-    bl_idname = "pose.rigify_reapply_order_members" + rig_id
+    bl_idname = "pose.rigify_reapply_order_members_" + rig_id
     bl_label = "Reapply previous members' order"
     bl_options = {'UNDO'}
 
@@ -354,7 +354,7 @@ class Rigify_Reapply_Members(bpy.types.Operator):
 
 class Rigify_Sort_Doubles(bpy.types.Operator):
     """Sort bones which have the same index"""
-    bl_idname = "pose.rigify_sort_doubles" + rig_id
+    bl_idname = "pose.rigify_sort_doubles_" + rig_id
     bl_label = "Sort double bones"
     bl_options = {'UNDO'}
 
@@ -383,7 +383,7 @@ class Rigify_Sort_Doubles(bpy.types.Operator):
 
 class Rigify_Reorder_Members(bpy.types.Operator):
     """ Change members' order"""
-    bl_idname = "pose.rigify_reorder_members" + rig_id
+    bl_idname = "pose.rigify_reorder_members_" + rig_id
     bl_label = "Change members' order"
     bl_options = {'UNDO'}
 
@@ -453,7 +453,7 @@ class Rigify_Reorder_Members(bpy.types.Operator):
 
 class Rigify_Reorder_Bones(bpy.types.Operator):
     """ Change bones' order"""
-    bl_idname = "pose.rigify_reorder_bones" + rig_id
+    bl_idname = "pose.rigify_reorder_bones_" + rig_id
     bl_label = "Change bones' order"
     bl_options = {'UNDO'}
 
@@ -586,7 +586,7 @@ class DATA_PT_members_panel(bpy.types.Panel):
     bl_region_type = 'UI'
     # bl_context = "object"
     bl_options = {'DEFAULT_CLOSED'}
-    bl_idname = rig_id + "PT_members"
+    bl_idname = "PANTIN_PT_members_" + rig_id
 
     @classmethod
     def poll(self, context):
@@ -615,29 +615,29 @@ class DATA_PT_members_panel(bpy.types.Panel):
                     row = col.row(align=True)
                     row.alignment = 'EXPAND'
                     row.prop(m, 'index', text="Member")# name.title()+':')
-                    op = row.operator("pose.rigify_reorder_members" + rig_id, icon='TRIA_UP', text="")
+                    op = row.operator("pose.rigify_reorder_members_" + rig_id, icon='TRIA_UP', text="")
                     op.list_member_index = i
                     op.direction = 'UP'
-                    op = row.operator("pose.rigify_reorder_members" + rig_id, icon='TRIA_DOWN', text="")
+                    op = row.operator("pose.rigify_reorder_members_" + rig_id, icon='TRIA_DOWN', text="")
                     op.list_member_index = i
                     op.direction = 'DOWN'
-                    op = row.operator("pose.rigify_fill_members" + rig_id, icon='FILE_REFRESH', text="")
+                    op = row.operator("pose.rigify_fill_members_" + rig_id, icon='FILE_REFRESH', text="")
                     row = col.row()
                     row.template_list("PANTIN_UL_bones_list", "bones_{}".format(i), id_store.pantin_members[i], "bones", id_store.pantin_members[i], "active_bone", rows=3)
 
                     sub = row.column(align=True)
-                    op = sub.operator("pose.rigify_reorder_bones" + rig_id, icon='TRIA_UP', text="")
+                    op = sub.operator("pose.rigify_reorder_bones_" + rig_id, icon='TRIA_UP', text="")
                     op.list_member_index = i
                     op.direction = 'UP'
-                    op = sub.operator("pose.rigify_reorder_bones" + rig_id, icon='TRIA_DOWN', text="")
+                    op = sub.operator("pose.rigify_reorder_bones_" + rig_id, icon='TRIA_DOWN', text="")
                     op.list_member_index = i
                     op.direction = 'DOWN'
 
                     col.separator()
             col = layout.column(align=True)
-            col.operator("pose.rigify_fill_members" + rig_id)
-            col.operator("pose.rigify_sort_doubles" + rig_id)
-            col.operator("pose.rigify_reapply_order_members" + rig_id)
+            col.operator("pose.rigify_fill_members_" + rig_id)
+            col.operator("pose.rigify_sort_doubles_" + rig_id)
+            col.operator("pose.rigify_reapply_order_members_" + rig_id)
 '''
 
 REGISTER_UI_PANTIN_MEMBERS = ['DATA_PT_members_panel']
@@ -653,23 +653,23 @@ ik_limb = [%s]
 fk_limb = [%s]
 
 if is_selected(ik_limb + fk_limb):
-    layout.operator("pose.rigify_swap_bones" + rig_id)
+    layout.operator("pose.rigify_swap_bones_" + rig_id)
     layout.separator()
     col = layout.column(align=True)
 
     row = col.row(align=True)
-    op = row.operator("pose.rigify_ik_switch" + rig_id, text="Snap FK to IK")
+    op = row.operator("pose.rigify_ik_switch_" + rig_id, text="Snap FK to IK")
     op.to_ik = True
     op.keyframe_insert = False
-    op = row.operator("pose.rigify_ik_switch" + rig_id, text="", icon="KEY_HLT")
+    op = row.operator("pose.rigify_ik_switch_" + rig_id, text="", icon="KEY_HLT")
     op.to_ik = True
     op.keyframe_insert = True
 
     row = col.row(align=True)
-    op = row.operator("pose.rigify_ik_switch" + rig_id, text="Snap IK to FK")
+    op = row.operator("pose.rigify_ik_switch_" + rig_id, text="Snap IK to FK")
     op.to_ik = False
     op.keyframe_insert = False
-    op = row.operator("pose.rigify_ik_switch" + rig_id, text="", icon="KEY_HLT")
+    op = row.operator("pose.rigify_ik_switch_" + rig_id, text="", icon="KEY_HLT")
     op.to_ik = False
     op.keyframe_insert = True
     layout.separator()
