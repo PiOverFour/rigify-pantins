@@ -149,8 +149,8 @@ class Rigify_IK_Switch(bpy.types.Operator):
     bl_label = "Snap IK/FK"
     bl_options = {'UNDO'}
 
-    to_ik = bpy.props.BoolProperty()
-    keyframe_insert = bpy.props.BoolProperty(default=False)
+    to_ik: bpy.props.BoolProperty()
+    keyframe_insert: bpy.props.BoolProperty(default=False)
 
     @classmethod
     def poll(cls, context):
@@ -256,9 +256,9 @@ class Rigify_Select_Member(bpy.types.Operator):
     bl_label = "Select control bones in member"
     bl_options = {'UNDO'}
 
-    layer = bpy.props.IntProperty()
-    add = bpy.props.BoolProperty(default=False)
-    sub = bpy.props.BoolProperty(default=False)
+    layer: bpy.props.IntProperty()
+    add: bpy.props.BoolProperty(default=False)
+    sub: bpy.props.BoolProperty(default=False)
 
     @classmethod
     def poll(cls, context):
@@ -387,8 +387,8 @@ class Rigify_Reorder_Members(bpy.types.Operator):
     bl_label = "Change members' order"
     bl_options = {'UNDO'}
 
-    direction = bpy.props.StringProperty()
-    list_member_index = bpy.props.IntProperty()
+    direction: bpy.props.StringProperty()
+    list_member_index: bpy.props.IntProperty()
 
     @classmethod
     def poll(cls, context):
@@ -457,8 +457,8 @@ class Rigify_Reorder_Bones(bpy.types.Operator):
     bl_label = "Change bones' order"
     bl_options = {'UNDO'}
 
-    direction = bpy.props.StringProperty()
-    list_member_index = bpy.props.IntProperty()
+    direction: bpy.props.StringProperty()
+    list_member_index: bpy.props.IntProperty()
 
     @classmethod
     def poll(cls, context):
@@ -529,8 +529,8 @@ REGISTER_PANTIN_Z_OPS = ['Rigify_Fill_Members', 'Rigify_Reapply_Members',
 
 UTILITIES_PANTIN_Z_UI = '''
 class PantinBones(bpy.types.PropertyGroup):
-    name = bpy.props.StringProperty()
-    index = bpy.props.IntProperty()
+    name: bpy.props.StringProperty()
+    index: bpy.props.IntProperty()
 
 def member_index_update(self, context):
     for m in self.id_data.pantin_members:
@@ -542,9 +542,9 @@ def member_index_update(self, context):
             continue
 
 class PantinMembers(bpy.types.PropertyGroup):
-    index = bpy.props.FloatProperty(precision=1, update=member_index_update)
-    bones = bpy.props.CollectionProperty(type=PantinBones)
-    active_bone = bpy.props.IntProperty()
+    index: bpy.props.FloatProperty(precision=1, update=member_index_update)
+    bones: bpy.props.CollectionProperty(type=PantinBones)
+    active_bone: bpy.props.IntProperty()
 
 class PANTIN_UL_bones_list(bpy.types.UIList):
     # The draw_item function is called for each item of the collection that is visible in the list.
