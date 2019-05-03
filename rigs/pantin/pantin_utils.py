@@ -74,14 +74,10 @@ def create_deformation(obj,
     org_bone_e = eb[bone_name]
     def_bone_e = eb.new(bone_name)
 
-#    bone = copy_bone(obj, bone_name, strip_org(bone_name))
-#    bone_e = eb[bone]
-
     if new_name == '':
         new_name = bone_name
     def_name = make_deformer_name(strip_org(new_name))
     def_bone_e.name = def_name
-#    def_bone_e.name = strip_org(bone_name)
 
     def_bone_e.parent = org_bone_e
     def_bone_e.use_connect = False
@@ -89,7 +85,6 @@ def create_deformation(obj,
     def_bone_e.head = org_bone_e.head
     def_bone_e.tail = org_bone_e.tail
     align_bone_z_axis(obj, def_name, Vector((0, -1, 0)))
-    # def_bone_e.tail.z += org_bone_e.length * 0.5
 
     bpy.ops.object.mode_set(mode='POSE')
 

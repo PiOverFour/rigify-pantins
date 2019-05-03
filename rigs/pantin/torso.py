@@ -95,8 +95,6 @@ class Rig:
                 align_bone_z_axis(self.obj, ctrl_bone, Vector((0, 1, 0)))
 
                 ctrl_bone_e = eb[ctrl_bone]
-                # ctrl_bone_e.parent = eb[self.org_bones[0]].parent
-                # eb[ctrl_bone].parent = None
                 eb[inter_pelvis].parent = ctrl_bone_e
             elif i == 1:
                 ctrl_bone_e.parent = eb[inter_pelvis]
@@ -115,41 +113,17 @@ class Rig:
                 bone_index=i)
             def_chain.append(def_bone)
 
-        # flip_e = eb[flip]
         pelvis_e = eb[ctrl_chain[0]]
         pelvis_e.use_connect = False
-        # pelvis_e.parent = flip_e
 
         bpy.ops.object.mode_set(mode='OBJECT')
         pb = self.obj.pose.bones
-
-        # # Pose bone settings
-        # flip_p = pb[flip]
-        # flip_p.rotation_mode = 'XZY'
-
-        # root_p = pb[root]
-        # root_p.lock_location = (False, False, True)
-        # root_p.lock_rotation = (True, True, False)
-        # root_p.lock_rotation_w = False
-        # root_p.lock_scale = (False, False, False)
-        # root_p.rotation_mode = 'XZY'
-
-        # # Set up custom properties
-        # prop = rna_idprop_ui_prop_get(flip_p, "flip", create=True)
-        # flip_p["flip"] = 0
-        # prop["soft_min"] = 0
-        # prop["soft_max"] = 1
-        # prop["min"] = 0
-        # prop["max"] = 1
 
         # Widgets
         global_scale = self.obj.dimensions[2]
         member_factor = 0.1
         widget_size = global_scale * member_factor
         pelvis = ctrl_chain[0]
-        # abdomen = ctrl_chain[1]
-        # torso = ctrl_chain[2]
-        # shoulder = ctrl_chain[3]
 
         # create_cube_widget(self.obj, pelvis, radius=widget_size*4)
         radius = widget_size
@@ -160,8 +134,6 @@ class Rig:
               (radius*2.0+pelvis_center.x, -radius+pelvis_center.z))
         pantin_utils.create_aligned_polygon_widget(
             self.obj, pelvis, vertex_points=vp)
-        # pantin_utils.create_aligned_half_ellipse_widget(
-        #     self.obj, root, width=widget_size*1.5, height=widget_size)
 
         for bone in ctrl_chain[1:]:
             pantin_utils.create_capsule_widget(
@@ -170,19 +142,6 @@ class Rig:
                 length=widget_size,
                 width=widget_size*0.1,
                 head_tail=0.5)
-            # create_widget(self.obj, bone)
-
-        # Drivers
-        # driver = self.obj.driver_add(
-        #     'pose.bones["{}"].rotation_euler'.format(flip), 1)
-        # driver.driver.expression = 'pi*flip'
-        # var_flip = driver.driver.variables.new()
-        #
-        # var_flip.type = 'SINGLE_PROP'
-        # var_flip.name = 'flip'
-        # var_flip.targets[0].id_type = 'OBJECT'
-        # var_flip.targets[0].id = self.obj
-        # var_flip.targets[0].data_path = 'pose.bones["root"]["flip"]'.format(flip)
 
         # Constraints
         # for pelvis
@@ -212,10 +171,6 @@ def add_parameters(params):
         name="Z index",
         default=0.0,
         description="Defines member's Z order")
-    params.root_name = bpy.props.StringProperty(
-        name="Root Name",
-        default="Root 1",
-        description="The name of the intermediate root bone")
 
 
 def parameters_ui(layout, params):
@@ -223,8 +178,6 @@ def parameters_ui(layout, params):
     """
     r = layout.row()
     r.prop(params, "Z_index")
-    r = layout.row()
-    r.prop(params, "root_name")
 
 
 def create_sample(obj):
@@ -272,10 +225,6 @@ def create_sample(obj):
     pbone.rotation_mode = 'XZY'
     try:
         pbone.rigify_parameters.Z_index = 1.0
-    except AttributeError:
-        pass
-    try:
-        pbone.rigify_parameters.root_name = "Root"
     except AttributeError:
         pass
     pbone = obj.pose.bones[bones['Spine']]
