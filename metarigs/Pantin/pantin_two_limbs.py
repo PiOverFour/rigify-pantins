@@ -61,128 +61,135 @@ def create(obj):
 
     arm.rigify_layers[0].name = "Head"
     arm.rigify_layers[0].row = 1
-    arm.rigify_layers[0].set = False
+    arm.rigify_layers[0].selset = False
     arm.rigify_layers[0].group = 4
     arm.rigify_layers[1].name = " "
     arm.rigify_layers[1].row = 1
-    arm.rigify_layers[1].set = False
+    arm.rigify_layers[1].selset = False
     arm.rigify_layers[1].group = 0
     arm.rigify_layers[2].name = "Torso"
     arm.rigify_layers[2].row = 2
-    arm.rigify_layers[2].set = False
+    arm.rigify_layers[2].selset = False
     arm.rigify_layers[2].group = 5
     arm.rigify_layers[3].name = " "
     arm.rigify_layers[3].row = 1
-    arm.rigify_layers[3].set = False
+    arm.rigify_layers[3].selset = False
     arm.rigify_layers[3].group = 0
     arm.rigify_layers[4].name = "Left Arm (IK)"
     arm.rigify_layers[4].row = 3
-    arm.rigify_layers[4].set = True
+    arm.rigify_layers[4].selset = False
     arm.rigify_layers[4].group = 1
     arm.rigify_layers[5].name = "Left Arm (FK)"
     arm.rigify_layers[5].row = 4
-    arm.rigify_layers[5].set = True
+    arm.rigify_layers[5].selset = False
     arm.rigify_layers[5].group = 1
     arm.rigify_layers[6].name = "Left Leg (IK)"
     arm.rigify_layers[6].row = 5
-    arm.rigify_layers[6].set = True
+    arm.rigify_layers[6].selset = False
     arm.rigify_layers[6].group = 1
     arm.rigify_layers[7].name = "Left Leg (FK)"
     arm.rigify_layers[7].row = 6
-    arm.rigify_layers[7].set = True
+    arm.rigify_layers[7].selset = False
     arm.rigify_layers[7].group = 1
     arm.rigify_layers[8].name = " "
     arm.rigify_layers[8].row = 1
-    arm.rigify_layers[8].set = False
+    arm.rigify_layers[8].selset = False
     arm.rigify_layers[8].group = 0
     arm.rigify_layers[9].name = " "
     arm.rigify_layers[9].row = 1
-    arm.rigify_layers[9].set = False
+    arm.rigify_layers[9].selset = False
     arm.rigify_layers[9].group = 0
     arm.rigify_layers[10].name = " "
     arm.rigify_layers[10].row = 1
-    arm.rigify_layers[10].set = False
+    arm.rigify_layers[10].selset = False
     arm.rigify_layers[10].group = 0
     arm.rigify_layers[11].name = " "
     arm.rigify_layers[11].row = 1
-    arm.rigify_layers[11].set = False
+    arm.rigify_layers[11].selset = False
     arm.rigify_layers[11].group = 0
     arm.rigify_layers[12].name = " "
     arm.rigify_layers[12].row = 1
-    arm.rigify_layers[12].set = False
+    arm.rigify_layers[12].selset = False
     arm.rigify_layers[12].group = 0
     arm.rigify_layers[13].name = " "
     arm.rigify_layers[13].row = 1
-    arm.rigify_layers[13].set = False
+    arm.rigify_layers[13].selset = False
     arm.rigify_layers[13].group = 0
     arm.rigify_layers[14].name = " "
     arm.rigify_layers[14].row = 1
-    arm.rigify_layers[14].set = False
+    arm.rigify_layers[14].selset = False
     arm.rigify_layers[14].group = 0
     arm.rigify_layers[15].name = " "
     arm.rigify_layers[15].row = 1
-    arm.rigify_layers[15].set = False
+    arm.rigify_layers[15].selset = False
     arm.rigify_layers[15].group = 0
     arm.rigify_layers[16].name = "Face"
     arm.rigify_layers[16].row = 1
-    arm.rigify_layers[16].set = False
+    arm.rigify_layers[16].selset = False
     arm.rigify_layers[16].group = 0
     arm.rigify_layers[17].name = " "
     arm.rigify_layers[17].row = 1
-    arm.rigify_layers[17].set = False
+    arm.rigify_layers[17].selset = False
     arm.rigify_layers[17].group = 0
     arm.rigify_layers[18].name = " "
     arm.rigify_layers[18].row = 1
-    arm.rigify_layers[18].set = False
+    arm.rigify_layers[18].selset = False
     arm.rigify_layers[18].group = 0
     arm.rigify_layers[19].name = " "
     arm.rigify_layers[19].row = 1
-    arm.rigify_layers[19].set = False
+    arm.rigify_layers[19].selset = False
     arm.rigify_layers[19].group = 0
     arm.rigify_layers[20].name = "Right Arm (IK)"
     arm.rigify_layers[20].row = 3
-    arm.rigify_layers[20].set = True
+    arm.rigify_layers[20].selset = False
     arm.rigify_layers[20].group = 2
     arm.rigify_layers[21].name = "Right Arm (FK)"
     arm.rigify_layers[21].row = 4
-    arm.rigify_layers[21].set = True
+    arm.rigify_layers[21].selset = False
     arm.rigify_layers[21].group = 2
     arm.rigify_layers[22].name = "Right Leg (IK)"
     arm.rigify_layers[22].row = 5
-    arm.rigify_layers[22].set = True
+    arm.rigify_layers[22].selset = False
     arm.rigify_layers[22].group = 2
     arm.rigify_layers[23].name = "Right Leg (FK)"
     arm.rigify_layers[23].row = 6
-    arm.rigify_layers[23].set = True
+    arm.rigify_layers[23].selset = False
     arm.rigify_layers[23].group = 2
     arm.rigify_layers[24].name = " "
     arm.rigify_layers[24].row = 1
-    arm.rigify_layers[24].set = False
+    arm.rigify_layers[24].selset = False
     arm.rigify_layers[24].group = 0
     arm.rigify_layers[25].name = " "
     arm.rigify_layers[25].row = 1
-    arm.rigify_layers[25].set = False
+    arm.rigify_layers[25].selset = False
     arm.rigify_layers[25].group = 0
     arm.rigify_layers[26].name = " "
     arm.rigify_layers[26].row = 1
-    arm.rigify_layers[26].set = False
+    arm.rigify_layers[26].selset = False
     arm.rigify_layers[26].group = 0
     arm.rigify_layers[27].name = " "
     arm.rigify_layers[27].row = 1
-    arm.rigify_layers[27].set = False
+    arm.rigify_layers[27].selset = False
     arm.rigify_layers[27].group = 0
     arm.rigify_layers[28].name = "Root"
     arm.rigify_layers[28].row = 14
-    arm.rigify_layers[28].set = False
+    arm.rigify_layers[28].selset = False
     arm.rigify_layers[28].group = 3
 
     bones = {}
 
+    bone = arm.edit_bones.new('Flip.001')
+    bone.head[:] = 0.0000, 0.0000, 0.0000
+    bone.tail[:] = 0.0000, 0.0000, 0.5000
+    bone.roll = 3.1416
+    bone.use_connect = False
+    bones['Flip.001'] = bone.name
     bone = arm.edit_bones.new('Pelvis')
     bone.head[:] = 0.0094, 0.0000, 0.9156
     bone.tail[:] = 0.0112, 0.0000, 1.0197
     bone.roll = -3.1243
     bone.use_connect = False
+    bone.parent = arm.edit_bones[bones['Flip.001']]
     bones['Pelvis'] = bone.name
     bone = arm.edit_bones.new('Spine')
     bone.head[:] = 0.0112, 0.0000, 1.0197
@@ -480,6 +487,14 @@ def create(obj):
     bones['Mouth_lower.L'] = bone.name
 
     bpy.ops.object.mode_set(mode='OBJECT')
+    pbone = obj.pose.bones[bones['Flip.001']]
+    pbone.rigify_type = 'pantin.flip'
+    pbone.lock_location = (False, False, True)
+    pbone.lock_rotation = (True, True, False)
+    pbone.lock_rotation_w = False
+    pbone.lock_scale = (False, False, False)
+    pbone.rotation_mode = 'XZY'
+    pbone.bone.layers = [False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False]
     pbone = obj.pose.bones[bones['Pelvis']]
     pbone.rigify_type = 'pantin.torso'
     pbone.lock_location = (False, False, True)
@@ -490,14 +505,6 @@ def create(obj):
     pbone.bone.layers = [False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
     try:
         pbone.rigify_parameters.Z_index = 1.0
-    except AttributeError:
-        pass
-    try:
-        pbone.rigify_parameters.flip_switch = False
-    except AttributeError:
-        pass
-    try:
-        pbone.rigify_parameters.root_name = "Root"
     except AttributeError:
         pass
     pbone = obj.pose.bones[bones['Spine']]
@@ -642,10 +649,6 @@ def create(obj):
     pbone.bone.layers = [True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
     try:
         pbone.rigify_parameters.Z_index = 0.0
-    except AttributeError:
-        pass
-    try:
-        pbone.rigify_parameters.flip_switch = False
     except AttributeError:
         pass
     try:
@@ -1025,9 +1028,7 @@ def create(obj):
         bone.select_tail = True
         arm.edit_bones.active = bone
 
-    arm.layers = [(x in [0, 2, 4, 6, 16, 20, 22]) for x in range(32)]
-
+    arm.layers = [(x in [0, 2, 4, 6, 16, 20, 22, 28]) for x in range(32)]
 
 if __name__ == "__main__":
     create(bpy.context.active_object)
-

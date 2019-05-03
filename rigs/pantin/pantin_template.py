@@ -21,57 +21,6 @@ UI_IMPORTS = [
     'from math import acos',
 ]
 
-UTILITIES_PANTIN_ROOT_MOD = '''
-#######################
-## Root modification ##
-#######################
-
-# Get rig object
-for obj in bpy.data.objects:
-    if (obj.data is not None
-            and "rig_id" in obj.data
-            and obj.data["rig_id"] == rig_id):
-        break
-
-# Set up custom properties
-pb = obj.pose.bones
-root = pb["root"]
-if not "flip" in root:
-    prop = rna_idprop_ui_prop_get(root, "flip", create=True)
-    root["flip"] = 0
-    prop["soft_min"] = 0
-    prop["soft_max"] = 1
-    prop["min"] = 0
-    prop["max"] = 1
-
-root.rotation_mode = 'XZY'
-
-# Set up driver if not existing
-root = obj.pose.bones["root"]
-data_path = root.path_from_id("rotation_euler")
-# Get if driver was created already
-for d in obj.animation_data.drivers:
-    if d.data_path == data_path:
-        do_create_driver = False
-
-        break
-    else:
-        do_create_driver = True
-
-if do_create_driver:
-    driver = obj.driver_add(data_path, 2)
-    driver.driver.expression = 'flip * pi'
-    var_fs = driver.driver.variables.new()
-
-    var_fs.type = 'SINGLE_PROP'
-    var_fs.name = 'flip'
-    var_fs.targets[0].id_type = 'OBJECT'
-    var_fs.targets[0].id = obj
-    var_fs.targets[0].data_path = (pb["root"].path_from_id()
-                                   + '["flip"]')
-
-'''
-
 UTILITIES_PANTIN_LIMBS = '''
 #######################
 ## Swapping operator ##
@@ -644,8 +593,6 @@ REGISTER_UI_PANTIN_MEMBERS = ['DATA_PT_members_panel']
 
 
 UI_PANTIN_SCRIPT = '''
-layout.prop(pose_bones["root"], '["flip"]', text="Flip", slider=True)
-layout.separator()
 '''
 
 UI_PANTIN_LIMB_SCRIPT = '''
@@ -768,7 +715,7 @@ if is_selected(fk_limb):
 REGISTER_PANTIN_PROPS = [('Object.pantin_members', 'bpy.props.CollectionProperty(type=PantinMembers)')]
 
 # Common utils
-PANTIN_UTILS = [UTILITIES_PANTIN_ROOT_MOD,
+PANTIN_UTILS = [
                 UTILITIES_PANTIN_SELECTION,
                 UTILITIES_PANTIN_Z_OPS,
                 UTILITIES_PANTIN_Z_UI,

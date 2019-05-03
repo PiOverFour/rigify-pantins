@@ -62,12 +62,21 @@ def layers_to_index(layers):
         if l:
             return i
 
+
+def get_flip_bone(obj, bone_name):
+    for p in obj.pose.bones[bone_name].parent_recursive:
+        if p.rigify_type == 'pantin.flip':
+            return strip_org(p.name)
+    return None
+
+
 def create_deformation(obj,
                        bone_name,
                        member_index=0,
                        bone_index=0,
                        extra_offset=0.0,
-                       new_name=''):
+                       new_name='',):
+    flip_bone = get_flip_bone(obj, bone_name)
     bpy.ops.object.mode_set(mode='EDIT')
     eb = obj.data.edit_bones
 
@@ -95,13 +104,20 @@ def create_deformation(obj,
 
     # Driver
     driver = obj.driver_add('pose.bones["{}"].location'.format(def_name), 2)
-    driver.driver.expression = (
-                    'member_index * 0.01 * -(flip*2-1) + bone_index * 0.001 * -(flip*2-1) - extra_offset * 0.01'
-    )
+    if flip_bone is None:
+        driver.driver.expression = (
+            'member_index * 0.01 + bone_index * 0.001 + extra_offset * 0.01')
+    else:
+        driver.driver.expression = (
+            'member_index * 0.01 * -(flip*2-1) '
+            '+ bone_index * 0.001 * -(flip*2-1) '
+            '- extra_offset * 0.01'
+            )
     var_mi = driver.driver.variables.new()
     var_bi = driver.driver.variables.new()
-    var_flip = driver.driver.variables.new()
     var_eo = driver.driver.variables.new()
+    if flip_bone is not None:
+        var_flip = driver.driver.variables.new()
 
     var_mi.type = 'SINGLE_PROP'
     var_mi.name = 'member_index'
@@ -127,11 +143,12 @@ def create_deformation(obj,
         'pose.bones["{}"]["extra_offset"]'.format(def_name)
     )
 
-    var_flip.type = 'SINGLE_PROP'
-    var_flip.name = 'flip'
-    var_flip.targets[0].id_type = 'OBJECT'
-    var_flip.targets[0].id = obj
-    var_flip.targets[0].data_path = 'pose.bones["root"]["flip"]'
+    if flip_bone is not None:
+        var_flip.type = 'SINGLE_PROP'
+        var_flip.name = 'flip'
+        var_flip.targets[0].id_type = 'OBJECT'
+        var_flip.targets[0].id = obj
+        var_flip.targets[0].data_path = 'pose.bones["%s"]["flip"]' % flip_bone
 
     bpy.ops.object.mode_set(mode='EDIT')
     return def_name
