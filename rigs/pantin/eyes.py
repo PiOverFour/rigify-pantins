@@ -37,14 +37,14 @@ class Rig:
         self.obj = obj
         self.params = params
 
-        eb = self.obj.data.edit_bones
+        bones = self.obj.data.bones
 
         self.org_bone = bone_name
-        if eb[bone_name].parent is not None:
-            self.org_parent = eb[bone_name].parent.name
+        if bones[bone_name].parent is not None:
+            self.org_parent = bones[bone_name].parent.name
         else:
             self.org_parent = None
-        if eb[bone_name].use_connect:
+        if bones[bone_name].use_connect:
             raise MetarigError(
                 "RIGIFY ERROR: Bone %s should not be connected. "
                 "Check bone chain for multiple pantin.simple rigs" % (
